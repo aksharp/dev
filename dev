@@ -3,7 +3,9 @@
 if [ $# -eq 0 ]
   then
     echo "Usage: dev [new|init|test]"
+    exit 1
 fi
+
 
 cmd1=$1
 
@@ -46,3 +48,4 @@ then
 else
   echo "Usage: dev [new|init|test]"
 fi
+
