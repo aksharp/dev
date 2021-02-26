@@ -1,0 +1,48 @@
+#!/bin/bash
+
+if [ $# -eq 0 ]
+  then
+    echo "Usage: dev [new|init|test]"
+fi
+
+cmd1=$1
+
+
+if [ "$cmd1" = "new" ]
+then
+  g8 aksharp/scala-seed.g8
+ 
+elif [ "$cmd1" = "init" ]
+then
+
+  if [ $# -eq 2 ]
+    then
+      GIT_REPO=$2
+      git init
+      git add .
+      git commit -am "init"
+      sbt compile
+      git remote add origin $GIT_REPO
+      git push -u origin master
+  else
+    echo "Usage: dev init [git@your-git-repo:path/your-project.git]"
+  fi
+
+elif [ "$cmd1" = "test" ]
+then
+
+  if [[ $# -eq 2 && $2 = "local" ]]
+    then
+      sbt "it:testOnly * -- -Ddc=local -Denv=local"
+  elif [ $# -eq 3 ]
+    then
+      DC=$2
+      ENV=$3
+      sbt "it:testOnly * -- -Ddc=$DC -Denv=$ENV"
+  else
+    echo "Usage: dev test local OR dev test [iad1|eu1|ap1] [canary|prod]"
+  fi
+
+else
+  echo "Usage: dev [new|init|test]"
+fi
